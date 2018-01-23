@@ -34,13 +34,13 @@ RUN set -ex \
         libblas-dev \
         liblapack-dev \
         libpq-dev \
-        libmysqlclient-dev \
+        default-libmysqlclient-dev \
         git \
     ' \
     && apt update -yqq \
     && apt install -yqq --no-install-recommends \
         $buildDeps \
-        libmysqlclient?? \
+        mysql-client \
         python3-pip \
         python3-requests \
         apt-utils \
