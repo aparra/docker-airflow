@@ -40,7 +40,7 @@ RUN set -ex \
     && apt update -yqq \
     && apt install -yqq --no-install-recommends \
         $buildDeps \
-        mysql-client \
+        libmariadbclient?? \
         python3-pip \
         python3-requests \
         apt-utils \
