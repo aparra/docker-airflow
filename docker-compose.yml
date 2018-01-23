@@ -26,10 +26,12 @@ services:
             - FERNET_KEY=e6R9D+hP3j3jf3bjcFV1edN0we1d5Scx2dau2G9tFmo=
             - EXECUTOR=Celery
             - MYSQL_USER=airflow
+            - MYSQL_HOST=mysql
             - MYSQL_PASSWORD=airflow
             - MYSQL_DB=airflow
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./ssh:/usr/local/airflow/.ssh
         ports:
             - "8080:8080"
         command: webserver
@@ -58,6 +60,7 @@ services:
             - webserver
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./ssh:/usr/local/airflow/.ssh
         environment:
             - LOAD_EX=n
             - FERNET_KEY=e6R9D+hP3j3jf3bjcFV1edN0we1d5Scx2dau2G9tFmo=
@@ -74,6 +77,7 @@ services:
             - scheduler
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./ssh:/usr/local/airflow/.ssh
         environment:
             - LOAD_EX=n
             - FERNET_KEY=e6R9D+hP3j3jf3bjcFV1edN0we1d5Scx2dau2G9tFmo=
