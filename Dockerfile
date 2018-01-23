@@ -1,27 +1,27 @@
-# VERSION 1.9.0-1
+# VERSION 1.9.0-2
 # AUTHOR: Matthieu "Puckel_" Roisil
-# DESCRIPTION: Basic Airflow container
-# BUILD: docker build --rm -t puckel/docker-airflow .
-# SOURCE: https://github.com/puckel/docker-airflow
+# DESCRIPTION: Airflow container
+# BUILD: docker build --rm .
+# SOURCE: https://github.com/iyesin/docker-airflow
 
 FROM python:3.6-slim
-MAINTAINER Puckel_
-
-# Never prompts the user for choices on installation/configuration of packages
-ENV DEBIAN_FRONTEND noninteractive
-ENV TERM linux
+MAINTAINER iyesin
 
 # Airflow
 ARG AIRFLOW_VERSION=1.9.0
 ARG AIRFLOW_HOME=/usr/local/airflow
 
-# Define en_US.
-ENV LANGUAGE en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-ENV LC_CTYPE en_US.UTF-8
-ENV LC_MESSAGES en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
+# Never prompts the user for choices on installation/configuration of packages
+# US English as default language
+ENV \
+    DEBIAN_FRONTEND=noninteractive \
+    TERM=linux \
+    LANGUAGE=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    LC_CTYPE=en_US.UTF-8 \
+    LC_MESSAGES=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
 
 RUN set -ex \
     && buildDeps=' \
@@ -34,11 +34,13 @@ RUN set -ex \
         libblas-dev \
         liblapack-dev \
         libpq-dev \
+        libmysqlclient-dev \
         git \
     ' \
-    && apt-get update -yqq \
-    && apt-get install -yqq --no-install-recommends \
+    && apt update -yqq \
+    && apt install -yqq --no-install-recommends \
         $buildDeps \
+        libmysqlclient?? \
         python3-pip \
         python3-requests \
         apt-utils \
@@ -51,19 +53,37 @@ RUN set -ex \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     && useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow \
     && python -m pip install -U pip setuptools wheel \
-    && pip install Cython \
-    && pip install pytz \
-    && pip install pyOpenSSL \
-    && pip install ndg-httpsclient \
-    && pip install pyasn1 \
-    && pip install apache-airflow[crypto,celery,postgres,hive,jdbc]==$AIRFLOW_VERSION \
-    && pip install celery[redis]==4.0.2 \
-    && apt-get purge --auto-remove -yqq $buildDeps \
+        Cython \
+        pytz \
+        pyOpenSSL \
+        ndg-httpsclient \
+        pyasn1 \
+        apache-airflow[crypto,celery,postgres,mysql,password,hive,jdbc]==$AIRFLOW_VERSION \
+        celery[redis]==4.0.2 \
+        boto \
+        boto3 \
+        pymysql \
+        mysqlclient \
+        PyAthenaJDBC \
+        eventlet \
+        kafka \
+        apiclient==1.0.3 \
+        google-api-python-client==1.5.5 \
+        pandas==0.19.2 \
+        pandas-gbq==0.1.6 \
+        simple-salesforce==0.73.0 \
+        slackclient==1.0.5 \
+        pysftp \
+        filechunkio \
+        prometheus_client \
+    && apt purge --purge --auto-remove -yqq $buildDeps \
     && apt-get clean \
     && rm -rf \
+        /root/.cache \
         /var/lib/apt/lists/* \
         /tmp/* \
         /var/tmp/* \
+        /var/cache/* \
         /usr/share/man \
         /usr/share/doc \
         /usr/share/doc-base
