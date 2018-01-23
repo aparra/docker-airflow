@@ -4,7 +4,7 @@
 # BUILD: docker build --rm .
 # SOURCE: https://github.com/iyesin/docker-airflow
 
-FROM python:3.6-slim
+FROM python:3.6-slim-stretch
 MAINTAINER iyesin
 
 # Airflow
