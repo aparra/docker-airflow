@@ -31,6 +31,7 @@ services:
             - MYSQL_DB=airflow
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./plugins:/usr/local/airflow/plugins
             - ./ssh:/usr/local/airflow/.ssh
         ports:
             - "8080:8080"
@@ -60,6 +61,7 @@ services:
             - webserver
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./plugins:/usr/local/airflow/plugins
             - ./ssh:/usr/local/airflow/.ssh
         environment:
             - LOAD_EX=n
@@ -77,6 +79,7 @@ services:
             - scheduler
         volumes:
             - ./dags:/usr/local/airflow/dags
+            - ./plugins:/usr/local/airflow/plugins
             - ./ssh:/usr/local/airflow/.ssh
         environment:
             - LOAD_EX=n
